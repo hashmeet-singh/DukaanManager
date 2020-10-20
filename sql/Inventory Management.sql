@@ -17,19 +17,19 @@ CREATE TABLE `order_items` (
 );
 
 CREATE TABLE `orders` (
-  `order_id` int PRIMARY KEY,
+  `order_id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int UNIQUE NOT NULL,
   `status` varchar(10),
   `created_at` timestamp DEFAULT (now()) COMMENT 'When order created'
 );
 
 CREATE TABLE `product_category` (
-  `category_id` int PRIMARY KEY,
+  `category_id` int PRIMARY KEY AUTO_INCREMENT,
   `category_description` varchar(255)
 );
 
 CREATE TABLE `products` (
-  `product_id` int PRIMARY KEY,
+  `product_id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(100),
   `brand_id` int,
   `price` int,
@@ -40,12 +40,12 @@ CREATE TABLE `products` (
 );
 
 CREATE TABLE `brands` (
-  `brand_id` INT PRIMARY KEY,
+  `brand_id` INT PRIMARY KEY AUTO_INCREMENT,
   `brand_name` varchar(255)
 );
 
 CREATE TABLE `suppliers` (
-  `supplier_id` int,
+  `supplier_id` int AUTO_INCREMENT,
   `supplier_name` varchar(255) not null,
   `supplier_email` varchar(60) ,
   `supplier_phone` int not null,
@@ -54,6 +54,7 @@ CREATE TABLE `suppliers` (
 );
 
 CREATE TABLE `product_supplier` (
+  `product_delivery_id` int PRIMARY KEY AUTO_INCREMENT,
   `product_id` int,
   `supplier_id` int,
   `delivery_date` datetime,

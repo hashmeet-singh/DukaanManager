@@ -1,15 +1,16 @@
 package com.rrdlabs.dukaanmanager.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "product_supplier")
 public class ProductSupplier {
+
+    @Id
+    @Column(name = "product_delivery_id")
+    private int id;
 
     @ManyToOne
     private Product product;
@@ -39,6 +40,14 @@ public class ProductSupplier {
         this.deliveryQuantity = deliveryQuantity;
         this.landingProce = landingProce;
         this.createdAt = createdAt;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Product getProduct() {
