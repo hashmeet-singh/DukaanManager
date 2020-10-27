@@ -2,6 +2,8 @@ package com.rrdlabs.dukaanmanager.entities;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -19,7 +21,11 @@ public class Order {
     @ManyToOne
     private User user;
 
-    public Order(){
+    @OneToMany
+    @JoinColumn(name = "order_id")
+    private List<OrderItem> orderItems;
+
+    public Order() {
     }
 
     public Order(String status, Timestamp createdAt, User user) {
@@ -58,5 +64,21 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public void addOrferItem(OrderItem orderItem) {
+        if (orderItems == null) {
+            orderItems = new ArrayList<>();
+        }
+
+        orderItems.add(orderItem);
     }
 }

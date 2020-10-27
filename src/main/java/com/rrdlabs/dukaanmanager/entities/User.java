@@ -1,28 +1,33 @@
 package com.rrdlabs.dukaanmanager.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int id;
 
     @Column(name = "first_name")
+    @NotBlank
     private String firstName;
 
     @Column(name = "last_name")
+    @NotBlank
     private String lastName;
 
     @Column(name = "phone_no")
+    @NotBlank
+    @Size(min = 10, max = 10, message = "phoneNo must contain 10 digits")
+    @Digits(integer = 10, fraction = 0, message = "phoneNo must be an integer")
     private String phoneNo;
 
     @Column(name = "email")
+    @Email
     private String email;
 
     public User() {
