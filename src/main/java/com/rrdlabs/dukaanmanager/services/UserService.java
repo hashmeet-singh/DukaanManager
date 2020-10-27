@@ -19,6 +19,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUser(int id) {
+        return userRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Invalid User id: " + id));
+    }
+
     public boolean validateUser(User user) {
 
         if (!user.getEmail().isEmpty() && !userRepository.findByEmail(user.getEmail()).isEmpty()) {
@@ -33,9 +37,5 @@ public class UserService {
 
     public User addUser(User user) {
         return userRepository.save(user);
-    }
-
-    public User getUser(int id) {
-        return userRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Invalid User id: " + id));
     }
 }

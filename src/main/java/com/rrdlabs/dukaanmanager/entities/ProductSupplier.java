@@ -12,10 +12,12 @@ public class ProductSupplier {
     @Column(name = "product_delivery_id")
     private int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
     @Column(name = "delivery_date")
@@ -25,20 +27,20 @@ public class ProductSupplier {
     private int deliveryQuantity;
 
     @Column(name = "landing_price")
-    private double landingProce;
+    private double landingPrice;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
 
-    public ProductSupplier(){
+    public ProductSupplier() {
     }
 
-    public ProductSupplier(Product product, Supplier supplier, Date deliveryDate, int deliveryQuantity, double landingProce, Timestamp createdAt) {
+    public ProductSupplier(Product product, Supplier supplier, Date deliveryDate, int deliveryQuantity, double landingPrice, Timestamp createdAt) {
         this.product = product;
         this.supplier = supplier;
         this.deliveryDate = deliveryDate;
         this.deliveryQuantity = deliveryQuantity;
-        this.landingProce = landingProce;
+        this.landingPrice = landingPrice;
         this.createdAt = createdAt;
     }
 
@@ -82,12 +84,12 @@ public class ProductSupplier {
         this.deliveryQuantity = deliveryQuantity;
     }
 
-    public double getLandingProce() {
-        return landingProce;
+    public double getLandingPrice() {
+        return landingPrice;
     }
 
-    public void setLandingProce(double landingProce) {
-        this.landingProce = landingProce;
+    public void setLandingPrice(double landingPrice) {
+        this.landingPrice = landingPrice;
     }
 
     public Timestamp getCreatedAt() {

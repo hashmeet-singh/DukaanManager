@@ -1,43 +1,52 @@
 package com.rrdlabs.dukaanmanager.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "products")
 public class Product {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
     private int id;
 
     @Column(name = "name")
+    @NotBlank
     private String name;
 
     @Column(name = "price")
+    @NotNull
+    @PositiveOrZero(message = "Price cannot be less than 0")
     private double price;
 
     @Column(name = "quantity")
+    @NotNull
+    @PositiveOrZero(message = "Quantity cannot be less that 0")
     private int quantity;
 
     @Column(name = "status")
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
     private ProductBrand productBrand;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
     private ProductCategory productCategory;
 
     public Product() {
     }
 
-    public Product(String name, double price, int quantity, String status, ProductBrand productBrand, ProductCategory productCategory) {
+    public Product(String name, double price, int quantity, String status) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.status = status;
-        this.productBrand = productBrand;
-        this.productCategory = productCategory;
     }
 
     public int getId() {

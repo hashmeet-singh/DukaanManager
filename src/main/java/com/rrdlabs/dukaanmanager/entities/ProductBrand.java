@@ -1,26 +1,26 @@
 package com.rrdlabs.dukaanmanager.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "brands")
 public class ProductBrand {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_id")
     private int id;
 
     @Column(name = "brand_name")
+    @NotBlank
     private String brandName;
 
     public ProductBrand() {
     }
 
     public ProductBrand(String brandName) {
-        this.brandName = brandName;
+        this.brandName = brandName.toUpperCase();
     }
 
     public int getId() {
@@ -36,6 +36,6 @@ public class ProductBrand {
     }
 
     public void setBrandName(String brandName) {
-        this.brandName = brandName;
+        this.brandName = brandName.toUpperCase();
     }
 }
