@@ -4,12 +4,12 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "customers")
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "customer_id")
     private int id;
 
     @Column(name = "first_name")
@@ -30,10 +30,10 @@ public class User {
     @Email
     private String email;
 
-    public User() {
+    public Customer() {
     }
 
-    public User(String firstName, String lastName, String phoneNo, String email) {
+    public Customer(String firstName, String lastName, String phoneNo, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNo = phoneNo;

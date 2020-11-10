@@ -1,7 +1,6 @@
 package com.rrdlabs.dukaanmanager.controllers;
 
 import com.rrdlabs.dukaanmanager.entities.Supplier;
-import com.rrdlabs.dukaanmanager.entities.User;
 import com.rrdlabs.dukaanmanager.services.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,7 @@ public class SupplierController {
     @PostMapping("/add")
     public ResponseEntity createUser(@Valid @RequestBody Supplier supplier) {
         if (supplierService.validateSupplier(supplier)) {
-            Supplier createdSupplier = supplierService.addSupplier(supplier);
+            Supplier createdSupplier = supplierService.createSupplier(supplier);
             return ResponseEntity.ok("Supplier created successfully with Id: " + createdSupplier.getId());
         }
 

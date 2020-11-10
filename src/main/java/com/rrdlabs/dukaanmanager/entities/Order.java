@@ -19,19 +19,22 @@ public class Order {
     private Timestamp createdAt;
 
     @ManyToOne
-    private User user;
+    private Customer customer;
 
-    @OneToMany
-    @JoinColumn(name = "order_id")
+    @ManyToOne
+    private Staff staff;
+
+    @OneToMany(mappedBy = "orderItemId.order")
     private List<OrderItem> orderItems;
 
     public Order() {
     }
 
-    public Order(String status, Timestamp createdAt, User user) {
+    public Order(String status, Timestamp createdAt, Customer customer, Staff staff) {
         this.status = status;
         this.createdAt = createdAt;
-        this.user = user;
+        this.customer = customer;
+        this.staff = staff;
     }
 
     public int getId() {
@@ -58,12 +61,20 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public User getUser() {
-        return user;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -74,7 +85,7 @@ public class Order {
         this.orderItems = orderItems;
     }
 
-    public void addOrferItem(OrderItem orderItem) {
+    public void addOrderItem(OrderItem orderItem) {
         if (orderItems == null) {
             orderItems = new ArrayList<>();
         }

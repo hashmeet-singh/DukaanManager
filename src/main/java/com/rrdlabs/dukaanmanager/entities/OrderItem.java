@@ -15,24 +15,19 @@ public class OrderItem {
     @Column(name = "price")
     private double price;
 
-    @MapsId("order_id")
-    @ManyToOne
-    @JoinColumn(insertable = false, updatable = false)
-    private Order order;
+    @Column(name = "status")
+    private String status;
 
-    @MapsId("product_id")
-    @ManyToOne
-    @JoinColumn(insertable = false, updatable = false)
-    private Product product;
-
-    public OrderItem(){
+    public OrderItem() {
     }
 
-    public OrderItem(int quantity, double price, Order order, Product product) {
+    public OrderItem(Order order, Product product, int quantity, double price, String status) {
+        orderItemId = new OrderItemId();
+        orderItemId.setOrder(order);
+        orderItemId.setProduct(product);
         this.quantity = quantity;
         this.price = price;
-        this.order = order;
-        this.product = product;
+        this.status = status;
     }
 
     public OrderItemId getOrderItemId() {
@@ -59,19 +54,11 @@ public class OrderItem {
         this.price = price;
     }
 
-    public Order getOrder() {
-        return order;
+    public String getStatus() {
+        return status;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
