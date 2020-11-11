@@ -1,5 +1,7 @@
 package com.rrdlabs.dukaanmanager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,6 +9,7 @@ import javax.persistence.*;
 public class OrderItem {
 
     @EmbeddedId
+    @JsonIgnore
     private OrderItemId orderItemId;
 
     @Column(name = "quantity")
@@ -36,6 +39,16 @@ public class OrderItem {
 
     public void setOrderItemId(OrderItemId orderItemId) {
         this.orderItemId = orderItemId;
+    }
+
+    @Transient
+    public Product getProduct() {
+        return this.orderItemId.getProduct();
+    }
+
+    @Transient
+    public double getTotalPrice() {
+        return getProduct().getPrice() * getQuantity();
     }
 
     public int getQuantity() {

@@ -3,10 +3,10 @@ CREATE SCHEMA dm;
 DROP TABLE IF EXISTS dm.`staffs`;
 CREATE TABLE dm.`staffs`
 (
-    `staff_id`   INT PRIMARY KEY AUTO_INCREMENT,
+    `staff_id`   BIGINT PRIMARY KEY AUTO_INCREMENT,
     `first_name` VARCHAR(30) NOT NULL,
     `last_name`  VARCHAR(30) NOT NULL,
-    `phone_no`   INT         NOT NULL UNIQUE,
+    `phone_no`   VARCHAR(10) NOT NULL UNIQUE,
     `email`      VARCHAR(60),
     `active`     BOOLEAN,
     `password`   VARCHAR(100),
@@ -16,10 +16,10 @@ CREATE TABLE dm.`staffs`
 DROP TABLE IF EXISTS dm.`customers`;
 CREATE TABLE dm.`customers`
 (
-    `customer_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `customer_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
     `first_name`  VARCHAR(30) NOT NULL,
     `last_name`   VARCHAR(30) NOT NULL,
-    `phone_no`    INT         NOT NULL UNIQUE,
+    `phone_no`    VARCHAR(10) NOT NULL UNIQUE,
     `email`       VARCHAR(60),
     `created_at`  TIMESTAMP DEFAULT (now())
 );
@@ -27,19 +27,19 @@ CREATE TABLE dm.`customers`
 DROP TABLE IF EXISTS dm.`order_items`;
 CREATE TABLE dm.`order_items`
 (
-    `order_id`   INT,
-    `product_id` INT,
+    `order_id`   BIGINT,
+    `product_id` BIGINT,
     `quantity`   INT DEFAULT 1,
     `price`      FLOAT,
-    `status`      VARCHAR(10)
+    `status`     VARCHAR(10)
 );
 
 DROP TABLE IF EXISTS dm.`orders`;
 CREATE TABLE dm.`orders`
 (
-    `order_id`    INT PRIMARY KEY AUTO_INCREMENT,
-    `customer_id` INT NOT NULL,
-    `staff_id`    INT NOT NULL,
+    `order_id`    BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `customer_id` BIGINT NOT NULL,
+    `staff_id`    BIGINT NOT NULL,
     `status`      VARCHAR(10),
     `created_at`  TIMESTAMP DEFAULT (now()) COMMENT 'When order created'
 );
@@ -47,16 +47,16 @@ CREATE TABLE dm.`orders`
 DROP TABLE IF EXISTS dm.`product_category`;
 CREATE TABLE dm.`product_category`
 (
-    `category_id`          INT PRIMARY KEY AUTO_INCREMENT,
+    `category_id`          BIGINT PRIMARY KEY AUTO_INCREMENT,
     `category_description` VARCHAR(255) UNIQUE
 );
 
 DROP TABLE IF EXISTS dm.`products`;
 CREATE TABLE dm.`products`
 (
-    `product_id`  INT PRIMARY KEY AUTO_INCREMENT,
+    `product_id`  BIGINT PRIMARY KEY AUTO_INCREMENT,
     `name`        VARCHAR(100),
-    `brand_id`    INT,
+    `brand_id`    BIGINT,
     `price`       INT,
     `quantity`    INT,
     `status`      VARCHAR(10),
@@ -67,26 +67,26 @@ CREATE TABLE dm.`products`
 DROP TABLE IF EXISTS dm.`brands`;
 CREATE TABLE dm.`brands`
 (
-    `brand_id`   INT PRIMARY KEY AUTO_INCREMENT,
+    `brand_id`   BIGINT PRIMARY KEY AUTO_INCREMENT,
     `brand_name` VARCHAR(255) UNIQUE
 );
 
 DROP TABLE IF EXISTS dm.`suppliers`;
 CREATE TABLE dm.`suppliers`
 (
-    `supplier_id`    INT PRIMARY KEY AUTO_INCREMENT,
+    `supplier_id`    BIGINT PRIMARY KEY AUTO_INCREMENT,
     `supplier_name`  VARCHAR(255) NOT NULL,
     `supplier_email` VARCHAR(60),
-    `supplier_phone` INT          NOT NULL,
+    `supplier_phone` VARCHAR(10) NOT NULL,
     `created at`     TIMESTAMP DEFAULT (now())
 );
 
 DROP TABLE IF EXISTS dm.`product_supplier`;
 CREATE TABLE dm.`product_supplier`
 (
-    `product_delivery_id` INT PRIMARY KEY AUTO_INCREMENT,
-    `product_id`          INT,
-    `supplier_id`         INT,
+    `product_delivery_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `product_id`          BIGINT,
+    `supplier_id`         BIGINT,
     `delivery_date`       DATETIME,
     `delivery_qty`        INT,
     `landing_price`       FLOAT,

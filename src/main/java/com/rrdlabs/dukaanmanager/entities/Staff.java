@@ -13,7 +13,7 @@ public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id")
-    private int id;
+    private Long id;
 
     @Column(name = "first_name")
     @NotBlank
@@ -46,11 +46,11 @@ public class Staff {
         this.email = email;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

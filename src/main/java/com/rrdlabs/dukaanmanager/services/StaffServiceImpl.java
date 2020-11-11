@@ -21,7 +21,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public Staff getStaff(int staffId) {
+    public Staff getStaff(Long staffId) {
         return staffRepository
                 .findById(staffId)
                 .orElseThrow(() -> new RecordNotFoundException("Invalid Staff Id: " + staffId));

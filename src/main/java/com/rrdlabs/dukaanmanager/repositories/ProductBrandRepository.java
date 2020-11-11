@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductBrandRepository extends JpaRepository<ProductBrand, Integer> {
+public interface ProductBrandRepository extends JpaRepository<ProductBrand, Long> {
 
     List<ProductBrand> findByBrandNameContainingIgnoreCase(String name);
 

@@ -31,6 +31,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductCategory getCategory(Long categoryId) {
+        return categoryRepository
+                .findById(categoryId)
+                .orElseThrow(() -> new RecordNotFoundException("Invalid Category Id: " + categoryId));
+    }
+
+    @Override
     public List<ProductCategory> getMatchingCategories(String description) {
         return categoryRepository.findByDescriptionContainingIgnoreCase(description);
     }
@@ -44,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductCategory createCategory(ProductCategory productCategory) {
         if (!getCategoryByDescription(productCategory.getDescription()).isEmpty())
             throw new KeyColumnDuplicationException("Category : '" + productCategory.getDescription() + "' is already present");
-        productCategory.setId(0);
+        productCategory.setId(0L);
 
         return categoryRepository.save(productCategory);
     }
@@ -52,6 +59,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductBrand> getAllBrands() {
         return brandRepository.findAll();
+    }
+
+    @Override
+    public ProductBrand getBrand(Long brandId) {
+        return brandRepository
+                .findById(brandId)
+                .orElseThrow(() -> new RecordNotFoundException("Invalid Brand Id: " + brandId));
     }
 
     @Override
@@ -68,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductBrand createBrand(ProductBrand productBrand) {
         if (!getBrandsByName(productBrand.getBrandName()).isEmpty())
             throw new KeyColumnDuplicationException("Brand : '" + productBrand.getBrandName() + "' is already present");
-        productBrand.setId(0);
+        productBrand.setId(0L);
 
         return brandRepository.save(productBrand);
     }
@@ -84,15 +98,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(int categoryId, int brandId, Product product) {
-        ProductCategory category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RecordNotFoundException("No category with id: " + categoryId + " found."));
-        ProductBrand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new RecordNotFoundException("No brand with id: " + brandId + " found."));
+    public Product createProduct(Long categoryId, Long brandId, Product product) {
+        ProductCategory category = getCategory(categoryId);
+        ProductBrand brand = getBrand(brandId);
 
         if (!getProductByName(product.getName()).isEmpty())
             throw new KeyColumnDuplicationException("Product : '" + product.getName() + "' is already present");
-        product.setId(0);
+        product.setId(0L);
         product.setProductCategory(category);
         product.setProductBrand(brand);
         return productRepository.save(product);
@@ -100,7 +112,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProduct(int productId) {
+    public Product getProduct(Long productId) {
         return productRepository
                 .findById(productId)
                 .orElseThrow(() -> new RecordNotFoundException("Invalid Product Id: " + productId));

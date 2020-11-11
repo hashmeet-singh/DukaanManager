@@ -10,9 +10,11 @@ public interface OrderService {
 
     Order createOrder(Order order);
 
-    Order getOrder(int orderId);
+    Order getOrder(Long orderId);
 
-    List<Order> getAllOrdersOfCustomer(int customerId);
+    List<Order> getAllOrders();
+
+    List<Order> getAllOrdersOfCustomer(Long customerId);
 
     OrderItem createOrderItem(OrderItem orderItem);
 

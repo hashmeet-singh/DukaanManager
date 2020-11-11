@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/suppliers")
+@RequestMapping("/api/supplier")
 public class SupplierController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class SupplierController {
     }
 
     @GetMapping("/{id}")
-    public Supplier getSupplierById(@PathVariable int id) {
+    public Supplier getSupplierById(@PathVariable Long id) {
         return supplierService.getSupplier(id);
     }
 

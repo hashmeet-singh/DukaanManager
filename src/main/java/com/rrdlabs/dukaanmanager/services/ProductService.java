@@ -9,6 +9,8 @@ import java.util.List;
 public interface ProductService {
     List<ProductCategory> getAllCategories();
 
+    ProductCategory getCategory(Long categoryId);
+
     List<ProductCategory> getMatchingCategories(String description);
 
     List<ProductCategory> getCategoryByDescription(String description);
@@ -16,6 +18,8 @@ public interface ProductService {
     ProductCategory createCategory(ProductCategory productCategory);
 
     List<ProductBrand> getAllBrands();
+
+    ProductBrand getBrand(Long brandId);
 
     List<ProductBrand> getMatchingBrands(String name);
 
@@ -27,7 +31,7 @@ public interface ProductService {
 
     List<Product> getProductByName(String name);
 
-    Product getProduct(int productId);
+    Product getProduct(Long productId);
 
-    Product createProduct(int categoryId, int brandId, Product product);
+    Product createProduct(Long categoryId, Long brandId, Product product);
 }

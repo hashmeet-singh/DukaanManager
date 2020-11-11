@@ -7,7 +7,7 @@ import java.util.List;
 public interface StaffService {
     List<Staff> getAllStaff();
 
-    Staff getStaff(int staffId);
+    Staff getStaff(Long staffId);
 
     boolean validateStaff(Staff staff);
 

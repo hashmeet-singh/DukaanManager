@@ -7,7 +7,7 @@ import java.util.List;
 public interface CustomerService {
     List<Customer> getAllCustomers();
 
-    Customer getCustomer(int id);
+    Customer getCustomer(Long id);
 
     boolean validateCustomer(Customer customer);
 

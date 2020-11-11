@@ -10,7 +10,7 @@ public class ProductSupplier {
 
     @Id
     @Column(name = "product_delivery_id")
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -44,11 +44,11 @@ public class ProductSupplier {
         this.createdAt = createdAt;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

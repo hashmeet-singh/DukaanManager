@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/customer")
 public class CustomerController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public Customer getCustomerById(@PathVariable int id) {
+    public Customer getCustomerById(@PathVariable Long id) {
         return customerService.getCustomer(id);
     }
 

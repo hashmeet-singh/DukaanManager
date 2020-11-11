@@ -1,16 +1,22 @@
 package com.rrdlabs.dukaanmanager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderItems")
 public class Order {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private int id;
+    private Long id;
 
     @Column(name = "status")
     private String status;
@@ -19,12 +25,15 @@ public class Order {
     private Timestamp createdAt;
 
     @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @ManyToOne
+    @JoinColumn(name = "staff_id")
     private Staff staff;
 
     @OneToMany(mappedBy = "orderItemId.order")
+    @Valid
     private List<OrderItem> orderItems;
 
     public Order() {
@@ -37,11 +46,24 @@ public class Order {
         this.staff = staff;
     }
 
-    public int getId() {
+    @Transient
+    public double getTotalOrderPrice() {
+        return getOrderItems()
+                .stream()
+                .mapToDouble(item -> item.getTotalPrice())
+                .sum();
+    }
+
+    @Transient
+    public int getNumberOfProducts() {
+        return getOrderItems().size();
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

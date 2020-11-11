@@ -1,17 +1,21 @@
 package com.rrdlabs.dukaanmanager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "order")
 public class OrderItemId implements Serializable {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 

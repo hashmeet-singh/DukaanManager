@@ -11,10 +11,7 @@ import com.rrdlabs.dukaanmanager.services.OrderService;
 import com.rrdlabs.dukaanmanager.services.ProductService;
 import com.rrdlabs.dukaanmanager.services.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +19,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/order")
 public class OrderController {
 
     @Autowired
@@ -36,6 +33,12 @@ public class OrderController {
 
     @Autowired
     private StaffService staffService;
+
+    @GetMapping("/all")
+    public List<Order> getAllOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        return orders;
+    }
 
     @PostMapping
     public Order createOrder(@RequestBody OrderForm orderForm) {

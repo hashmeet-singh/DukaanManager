@@ -27,14 +27,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrder(int orderId) {
+    public Order getOrder(Long orderId) {
         return orderRepository
                 .findById(orderId)
                 .orElseThrow(() -> new RecordNotFoundException("Invalid Order Id: " + orderId));
     }
 
     @Override
-    public List<Order> getAllOrdersOfCustomer(int customerId) {
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public List<Order> getAllOrdersOfCustomer(Long customerId) {
         return orderRepository.findByCustomerId(customerId);
     }
 

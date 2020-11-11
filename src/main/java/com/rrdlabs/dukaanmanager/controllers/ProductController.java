@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/product")
 public class ProductController {
 
     @Autowired
@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     @PostMapping("/{categoryId}/{brandId}")
-    public Product addProduct(@PathVariable int categoryId, @PathVariable int brandId, @RequestBody Product product) {
+    public Product addProduct(@PathVariable Long categoryId, @PathVariable Long brandId, @RequestBody Product product) {
         return productService.createProduct(categoryId, brandId, product);
     }
 }
