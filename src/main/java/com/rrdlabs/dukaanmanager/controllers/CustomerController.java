@@ -1,7 +1,9 @@
 package com.rrdlabs.dukaanmanager.controllers;
 
 import com.rrdlabs.dukaanmanager.entities.Customer;
+import com.rrdlabs.dukaanmanager.entities.Order;
 import com.rrdlabs.dukaanmanager.services.CustomerService;
+import com.rrdlabs.dukaanmanager.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,14 @@ import java.util.List;
 @RequestMapping("/api/customer")
 public class CustomerController {
 
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
+
+    private final OrderService orderService;
+
+    public CustomerController(CustomerService customerService, OrderService orderService) {
+        this.customerService = customerService;
+        this.orderService = orderService;
+    }
 
     @GetMapping("/all")
     public List<Customer> getAllCustomers() {
@@ -25,6 +33,11 @@ public class CustomerController {
     @GetMapping("/{id}")
     public Customer getCustomerById(@PathVariable Long id) {
         return customerService.getCustomer(id);
+    }
+
+    @GetMapping("/{id}/orders")
+    public List<Order> getCustomerOrders(@PathVariable Long id){
+        return orderService.getCustomerOrders(id);
     }
 
     @PostMapping("/add")

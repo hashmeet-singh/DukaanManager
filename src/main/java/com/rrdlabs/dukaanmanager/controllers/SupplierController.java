@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("/api/supplier")
 public class SupplierController {
 
-    @Autowired
-    private SupplierService supplierService;
+    private final SupplierService supplierService;
+
+    public SupplierController(SupplierService supplierService) {
+        this.supplierService = supplierService;
+    }
 
     @GetMapping("/all")
     public List<Supplier> getAllSuppliers() {

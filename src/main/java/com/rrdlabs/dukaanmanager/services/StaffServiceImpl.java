@@ -12,8 +12,11 @@ import java.util.List;
 @Service
 public class StaffServiceImpl implements StaffService {
 
-    @Autowired
-    StaffRepository staffRepository;
+    private final StaffRepository staffRepository;
+
+    public StaffServiceImpl(StaffRepository staffRepository) {
+        this.staffRepository = staffRepository;
+    }
 
     @Override
     public List<Staff> getAllStaff() {

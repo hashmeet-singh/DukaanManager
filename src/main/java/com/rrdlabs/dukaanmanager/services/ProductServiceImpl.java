@@ -16,14 +16,17 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private ProductCategoryRepository categoryRepository;
+    private final ProductCategoryRepository categoryRepository;
 
-    @Autowired
-    private ProductBrandRepository brandRepository;
+    private final ProductBrandRepository brandRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository, ProductCategoryRepository categoryRepository, ProductBrandRepository brandRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.brandRepository = brandRepository;
+    }
 
     @Override
     public List<ProductCategory> getAllCategories() {
@@ -98,6 +101,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product getProduct(Long productId) {
+        return productRepository
+                .findById(productId)
+                .orElseThrow(() -> new RecordNotFoundException("Invalid Product Id: " + productId));
+    }
+
+    @Override
     public Product createProduct(Long categoryId, Long brandId, Product product) {
         ProductCategory category = getCategory(categoryId);
         ProductBrand brand = getBrand(brandId);
@@ -112,9 +122,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProduct(Long productId) {
-        return productRepository
-                .findById(productId)
-                .orElseThrow(() -> new RecordNotFoundException("Invalid Product Id: " + productId));
+    public Product updateProduct(Product product) {
+        return productRepository.save(product);
     }
 }

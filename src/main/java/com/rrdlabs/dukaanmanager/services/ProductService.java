@@ -34,4 +34,6 @@ public interface ProductService {
     Product getProduct(Long productId);
 
     Product createProduct(Long categoryId, Long brandId, Product product);
+
+    Product updateProduct(Product product);
 }
