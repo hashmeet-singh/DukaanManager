@@ -16,21 +16,17 @@ public class OrderItem {
     private int quantity;
 
     @Column(name = "price")
-    private double price;
-
-    @Column(name = "status")
-    private String status;
+    private double sellingPrice;
 
     public OrderItem() {
     }
 
-    public OrderItem(Order order, Product product, int quantity, double price, String status) {
+    public OrderItem(Order order, Product product, int quantity, double sellingPrice) {
         orderItemId = new OrderItemId();
         orderItemId.setOrder(order);
         orderItemId.setProduct(product);
         this.quantity = quantity;
-        this.price = price;
-        this.status = status;
+        this.sellingPrice = sellingPrice;
     }
 
     public OrderItemId getOrderItemId() {
@@ -59,19 +55,12 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
-        return price;
+    public double getSellingPrice() {
+        return sellingPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setSellingPrice(double price) {
+        this.sellingPrice = price;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

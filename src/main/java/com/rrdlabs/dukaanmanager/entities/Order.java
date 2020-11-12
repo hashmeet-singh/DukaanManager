@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,9 @@ public class Order {
     private Long id;
 
     @Column(name = "status")
-    private String status;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -39,11 +42,11 @@ public class Order {
     public Order() {
     }
 
-    public Order(String status, Timestamp createdAt, Customer customer, Staff staff) {
+    public Order(OrderStatus status, Customer customer, Staff staff, Timestamp createdAt) {
         this.status = status;
-        this.createdAt = createdAt;
         this.customer = customer;
         this.staff = staff;
+        this.createdAt = createdAt;
     }
 
     @Transient
@@ -67,11 +70,11 @@ public class Order {
         this.id = id;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
