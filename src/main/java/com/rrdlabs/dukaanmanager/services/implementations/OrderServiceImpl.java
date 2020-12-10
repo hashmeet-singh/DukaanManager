@@ -1,4 +1,4 @@
-package com.rrdlabs.dukaanmanager.services;
+package com.rrdlabs.dukaanmanager.services.implementations;
 
 import com.rrdlabs.dukaanmanager.dto.OrderItemDto;
 import com.rrdlabs.dukaanmanager.entities.*;
@@ -6,10 +6,14 @@ import com.rrdlabs.dukaanmanager.exceptions.QuantityExceededException;
 import com.rrdlabs.dukaanmanager.exceptions.RecordNotFoundException;
 import com.rrdlabs.dukaanmanager.repositories.OrderItemRepository;
 import com.rrdlabs.dukaanmanager.repositories.OrderRepository;
+import com.rrdlabs.dukaanmanager.services.CustomerService;
+import com.rrdlabs.dukaanmanager.services.OrderService;
+import com.rrdlabs.dukaanmanager.services.ProductService;
+import com.rrdlabs.dukaanmanager.services.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;

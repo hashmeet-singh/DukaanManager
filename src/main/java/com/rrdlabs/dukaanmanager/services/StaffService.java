@@ -9,7 +9,11 @@ public interface StaffService {
 
     Staff getStaff(Long staffId);
 
-    boolean validateStaff(Staff staff);
+    void validateStaff(Staff staff);
 
     Staff createStaff(Staff staff);
+
+    Staff updateStaff(Staff staff);
+
+    void deleteStaff(Long staffId);
 }

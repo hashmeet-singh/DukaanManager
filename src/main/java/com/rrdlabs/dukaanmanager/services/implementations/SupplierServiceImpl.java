@@ -1,12 +1,14 @@
-package com.rrdlabs.dukaanmanager.services;
+package com.rrdlabs.dukaanmanager.services.implementations;
 
 import com.rrdlabs.dukaanmanager.entities.Supplier;
 import com.rrdlabs.dukaanmanager.exceptions.KeyColumnDuplicationException;
 import com.rrdlabs.dukaanmanager.exceptions.RecordNotFoundException;
 import com.rrdlabs.dukaanmanager.repositories.SupplierRepository;
+import com.rrdlabs.dukaanmanager.services.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -29,7 +31,7 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public boolean validateSupplier(Supplier supplier) {
+    public void validateSupplier(Supplier supplier) {
         if (!supplier.getEmail().isEmpty() && !supplierRepository.findByEmail(supplier.getEmail()).isEmpty()) {
             throw new KeyColumnDuplicationException("Email address: " + supplier.getEmail() + " is already registered.");
         }
@@ -37,11 +39,21 @@ public class SupplierServiceImpl implements SupplierService {
         if (!supplierRepository.findByPhoneNo(supplier.getPhoneNo()).isEmpty()) {
             throw new KeyColumnDuplicationException("Phone Number: " + supplier.getPhoneNo() + " is already registered.");
         }
-        return true;
     }
 
     @Override
+    @Transactional
     public Supplier createSupplier(Supplier supplier) {
         return supplierRepository.save(supplier);
+    }
+
+    @Override
+    public Supplier updateSupplier(Supplier supplier) {
+        return supplierRepository.save(supplier);
+    }
+
+    @Override
+    public void deleteSupplier(Long supplierId) {
+        supplierRepository.deleteById(supplierId);
     }
 }

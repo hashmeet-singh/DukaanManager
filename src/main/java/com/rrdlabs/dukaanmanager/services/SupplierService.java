@@ -7,9 +7,13 @@ import java.util.List;
 public interface SupplierService {
     List<Supplier> getAllSuppliers();
 
-    Supplier getSupplier(Long id);
+    Supplier getSupplier(Long supplierId);
 
-    boolean validateSupplier(Supplier supplier);
+    void validateSupplier(Supplier supplier);
 
     Supplier createSupplier(Supplier supplier);
+
+    Supplier updateSupplier(Supplier supplier);
+
+    void deleteSupplier(Long supplierId);
 }

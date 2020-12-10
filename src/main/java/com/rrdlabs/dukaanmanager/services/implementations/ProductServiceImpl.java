@@ -1,4 +1,4 @@
-package com.rrdlabs.dukaanmanager.services;
+package com.rrdlabs.dukaanmanager.services.implementations;
 
 import com.rrdlabs.dukaanmanager.entities.Product;
 import com.rrdlabs.dukaanmanager.entities.ProductBrand;
@@ -8,12 +8,15 @@ import com.rrdlabs.dukaanmanager.exceptions.RecordNotFoundException;
 import com.rrdlabs.dukaanmanager.repositories.ProductBrandRepository;
 import com.rrdlabs.dukaanmanager.repositories.ProductCategoryRepository;
 import com.rrdlabs.dukaanmanager.repositories.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rrdlabs.dukaanmanager.services.ProductService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -60,6 +63,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductCategory updateCategory(ProductCategory productCategory) {
+        return categoryRepository.save(productCategory);
+    }
+
+    @Override
+    public void deleteCategory(Long categoryId) {
+        categoryRepository.deleteById(categoryId);
+    }
+
+    @Override
     public List<ProductBrand> getAllBrands() {
         return brandRepository.findAll();
     }
@@ -91,6 +104,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductBrand updateBrand(ProductBrand productBrand) {
+        return brandRepository.save(productBrand);
+    }
+
+    @Override
+    public void deleteBrand(Long brandId) {
+        brandRepository.deleteById(brandId);
+    }
+
+    @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
@@ -108,9 +131,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(Long categoryId, Long brandId, Product product) {
-        ProductCategory category = getCategory(categoryId);
-        ProductBrand brand = getBrand(brandId);
+    @Transactional
+    public Product createProduct(Product product) {
+        ProductCategory category = getCategory(product.getProductCategory().getId());
+        ProductBrand brand = getBrand(product.getProductBrand().getId());
 
         if (!getProductByName(product.getName()).isEmpty())
             throw new KeyColumnDuplicationException("Product : '" + product.getName() + "' is already present");
@@ -124,5 +148,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product updateProduct(Product product) {
         return productRepository.save(product);
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Product> categoryProducts(Long categoryId) {
+        ProductCategory category = getCategory(categoryId);
+        return productRepository.findByProductCategory(category);
+    }
+
+    @Override
+    public List<Product> brandProducts(Long brandId) {
+        return productRepository.findByProductBrand_Id(brandId);
     }
 }

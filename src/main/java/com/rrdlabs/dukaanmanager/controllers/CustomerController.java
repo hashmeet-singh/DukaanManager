@@ -4,7 +4,6 @@ import com.rrdlabs.dukaanmanager.entities.Customer;
 import com.rrdlabs.dukaanmanager.entities.Order;
 import com.rrdlabs.dukaanmanager.services.CustomerService;
 import com.rrdlabs.dukaanmanager.services.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customer")
+@RequestMapping("/api/customers")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -25,28 +24,38 @@ public class CustomerController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Customer> getAllCustomers() {
         return customerService.getAllCustomers();
     }
 
-    @GetMapping("/{id}")
-    public Customer getCustomerById(@PathVariable Long id) {
+    @GetMapping("/{customer_id}")
+    public Customer getCustomerById(@PathVariable(name = "customer_id") Long id) {
         return customerService.getCustomer(id);
     }
 
-    @GetMapping("/{id}/orders")
-    public List<Order> getCustomerOrders(@PathVariable Long id){
+    // TODO: 10-12-2020 Implement logic for API
+    @GetMapping("/{customer_id}/orders")
+    public List<Order> getCustomerOrders(@PathVariable(name = "customer_id") Long id) {
         return orderService.getCustomerOrders(id);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity createCustomer(@Valid @RequestBody Customer user) {
-        if (customerService.validateCustomer(user)) {
-            Customer createdCustomer = customerService.createCustomer(user);
-            return ResponseEntity.ok("Customer created successfully with Id: " + createdCustomer.getId());
-        }
+    @PostMapping
+    public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer user) {
+        customerService.validateCustomer(user);
+        Customer createdCustomer = customerService.createCustomer(user);
+        return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
+    }
 
-        return new ResponseEntity("Validation Failed", HttpStatus.BAD_REQUEST);
+    @PutMapping("/{customer_id}")
+    public Customer updateCustomer(@PathVariable(name = "customer_id") Long id, @Valid @RequestBody Customer customer) {
+        customerService.getCustomer(id);
+        customer.setId(id);
+        return customerService.updateCustomer(customer);
+    }
+
+    @DeleteMapping("/{customer_id}")
+    public void deleteCustomer(@PathVariable(name = "customer_id") Long id) {
+        customerService.deleteCustomer(id);
     }
 }
