@@ -5,13 +5,13 @@ import com.rrdlabs.dukaanmanager.exceptions.KeyColumnDuplicationException;
 import com.rrdlabs.dukaanmanager.exceptions.RecordNotFoundException;
 import com.rrdlabs.dukaanmanager.repositories.StaffRepository;
 import com.rrdlabs.dukaanmanager.services.StaffService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class StaffServiceImpl implements StaffService {
 
     private final StaffRepository staffRepository;

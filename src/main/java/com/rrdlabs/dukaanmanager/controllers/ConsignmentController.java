@@ -1,14 +1,17 @@
 package com.rrdlabs.dukaanmanager.controllers;
 
 import com.rrdlabs.dukaanmanager.entities.Consignment;
+import com.rrdlabs.dukaanmanager.entities.dto.ConsignmentRequestDto;
 import com.rrdlabs.dukaanmanager.services.ConsignmentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/consignment")
+@RequestMapping("/api/consignments")
 public class ConsignmentController {
 
     private final ConsignmentService consignmentService;
@@ -17,18 +20,19 @@ public class ConsignmentController {
         this.consignmentService = consignmentService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Consignment> getAllConsignments() {
         return consignmentService.getAllConsignments();
     }
 
-    @GetMapping("/{id}")
-    public Consignment getConsignmentById(@PathVariable Long id) {
+    @GetMapping("/{consignment_id}")
+    public Consignment getConsignmentById(@PathVariable(name = "consignment_id") Long id) {
         return consignmentService.getConsignment(id);
     }
 
     @PostMapping
-    public Consignment recordConsignment(@Valid @RequestBody Consignment consignment) {
-        return consignmentService.createConsignment(consignment);
+    public ResponseEntity<List<Consignment>> recordConsignment(@Valid @RequestBody ConsignmentRequestDto consignment) {
+        List<Consignment> createdConsignment = consignmentService.createConsignment(consignment);
+        return new ResponseEntity<>(createdConsignment, HttpStatus.CREATED);
     }
 }

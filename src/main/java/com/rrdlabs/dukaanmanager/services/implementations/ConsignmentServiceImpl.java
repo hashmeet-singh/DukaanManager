@@ -2,6 +2,8 @@ package com.rrdlabs.dukaanmanager.services.implementations;
 
 import com.rrdlabs.dukaanmanager.entities.Consignment;
 import com.rrdlabs.dukaanmanager.entities.Product;
+import com.rrdlabs.dukaanmanager.entities.Supplier;
+import com.rrdlabs.dukaanmanager.entities.dto.ConsignmentRequestDto;
 import com.rrdlabs.dukaanmanager.exceptions.RecordNotFoundException;
 import com.rrdlabs.dukaanmanager.repositories.ConsignmentRepository;
 import com.rrdlabs.dukaanmanager.services.ConsignmentService;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,21 +32,18 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    @Transactional
-    public Consignment createConsignment(Consignment consignment) {
-//        Supplier supplier = supplierService.getSupplier(consignment.getSupplier().getId());
-        Product product = productService.getProduct(consignment.getProduct().getId());
-//        try {
-//            Thread.sleep(10000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        consignment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        product.setQuantity(product.getQuantity() + consignment.getDeliveryQuantity());
-        consignment = consignmentRepository.save(consignment);
-        productService.updateProduct(product);
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public List<Consignment> createConsignment(final ConsignmentRequestDto consignmentRequest) {
+        List<Consignment> createdConsignmets = new ArrayList<>();
+        Supplier supplier = supplierService.getSupplier(consignmentRequest.getSupplierId());
+        consignmentRequest.getLineItems().forEach(lineItemDto -> {
+            Product product = productService.getProduct(lineItemDto.getProductId());
+            Consignment consignment = new Consignment(product, supplier, consignmentRequest.getDeliveryDate(), lineItemDto.getQuantity(), lineItemDto.getPrice(), new Timestamp(System.currentTimeMillis()));
+            createdConsignmets.add(consignmentRepository.save(consignment));
+            productService.adjustProductQuantity(lineItemDto.getProductId(), lineItemDto.getQuantity());
+        });
 
-        return consignment;
+        return createdConsignmets;
     }
 
     @Override

@@ -4,12 +4,14 @@ import com.rrdlabs.dukaanmanager.entities.Product;
 import com.rrdlabs.dukaanmanager.entities.ProductBrand;
 import com.rrdlabs.dukaanmanager.entities.ProductCategory;
 import com.rrdlabs.dukaanmanager.exceptions.KeyColumnDuplicationException;
+import com.rrdlabs.dukaanmanager.exceptions.QuantityExceededException;
 import com.rrdlabs.dukaanmanager.exceptions.RecordNotFoundException;
 import com.rrdlabs.dukaanmanager.repositories.ProductBrandRepository;
 import com.rrdlabs.dukaanmanager.repositories.ProductCategoryRepository;
 import com.rrdlabs.dukaanmanager.repositories.ProductRepository;
 import com.rrdlabs.dukaanmanager.services.ProductService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ProductCategory createCategory(ProductCategory productCategory) {
         if (!getCategoryByDescription(productCategory.getDescription()).isEmpty())
             throw new KeyColumnDuplicationException("Category : '" + productCategory.getDescription() + "' is already present");
@@ -63,6 +66,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ProductCategory updateCategory(ProductCategory productCategory) {
         return categoryRepository.save(productCategory);
     }
@@ -95,6 +99,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ProductBrand createBrand(ProductBrand productBrand) {
         if (!getBrandsByName(productBrand.getBrandName()).isEmpty())
             throw new KeyColumnDuplicationException("Brand : '" + productBrand.getBrandName() + "' is already present");
@@ -104,6 +109,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ProductBrand updateBrand(ProductBrand productBrand) {
         return brandRepository.save(productBrand);
     }
@@ -131,7 +137,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public Product createProduct(Product product) {
         ProductCategory category = getCategory(product.getProductCategory().getId());
         ProductBrand brand = getBrand(product.getProductBrand().getId());
@@ -146,7 +152,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public Product updateProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public Product adjustProductQuantity(Long productId, int quantity) {
+        Product product = getProduct(productId);
+        if (product.getQuantity() + quantity < 0) {
+            throw new QuantityExceededException("Quantity limit exceeded./nMax quantity available for Product Id: " + product.getId() + " is: " + product.getQuantity());
+        }
+
+        product.setQuantity(product.getQuantity() + quantity);
         return productRepository.save(product);
     }
 

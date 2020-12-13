@@ -1,22 +1,15 @@
 package com.rrdlabs.dukaanmanager.controllers;
 
-import com.rrdlabs.dukaanmanager.dto.OrderItemDto;
 import com.rrdlabs.dukaanmanager.entities.*;
-import com.rrdlabs.dukaanmanager.exceptions.RecordNotFoundException;
-import com.rrdlabs.dukaanmanager.services.CustomerService;
+import com.rrdlabs.dukaanmanager.entities.dto.OrderRequestDto;
 import com.rrdlabs.dukaanmanager.services.OrderService;
-import com.rrdlabs.dukaanmanager.services.ProductService;
-import com.rrdlabs.dukaanmanager.services.StaffService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/orders")
 public class OrderController {
 
     private OrderService orderService;
@@ -25,20 +18,32 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Order> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
         return orders;
     }
 
-    @GetMapping("/{id}")
-    public Order getOrderById(@PathVariable Long id) {
+    @GetMapping("/{order_id}")
+    public Order getOrderById(@PathVariable(name = "order_id") Long id) {
         return orderService.getOrder(id);
     }
 
     @PostMapping
-    public Order createOrder(@RequestBody OrderRequest orderRequest) {
+    public Order createOrder(@Valid @RequestBody OrderRequestDto orderRequest) {
         return orderService.createOrder(orderRequest);
+    }
+
+    @PostMapping("/{order_id}/close")
+    public Order closeOrder(@PathVariable(name = "order_id") Long id) {
+        Order order = orderService.getOrder(id);
+        order.setStatus(OrderStatus.COMPLETED);
+        return orderService.update(order);
+    }
+
+    @PostMapping("/{order_id}/cancel")
+    public Order cancelOrder(@PathVariable(name = "order_id") Long id) {
+        return null;
     }
 
 

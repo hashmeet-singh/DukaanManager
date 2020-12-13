@@ -1,13 +1,18 @@
-package com.rrdlabs.dukaanmanager.entities;
+package com.rrdlabs.dukaanmanager.entities.dto;
 
-import com.rrdlabs.dukaanmanager.dto.OrderItemDto;
-
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public class OrderRequest {
+public class OrderRequestDto {
+
+    @NotNull
     private Long customerId;
+
+    @NotNull
     private Long staffId;
-    private List<OrderItemDto> orderItems;
+
+    @NotNull
+    private List<LineItemDto> lineItems;
 
     public Long getCustomerId() {
         return customerId;
@@ -25,11 +30,11 @@ public class OrderRequest {
         this.staffId = staffId;
     }
 
-    public List<OrderItemDto> getOrderItems() {
-        return orderItems;
+    public List<LineItemDto> getLineItems() {
+        return lineItems;
     }
 
-    public void setOrderItems(List<OrderItemDto> orderItems) {
-        this.orderItems = orderItems;
+    public void setLineItems(List<LineItemDto> orderItems) {
+        this.lineItems = orderItems;
     }
 }

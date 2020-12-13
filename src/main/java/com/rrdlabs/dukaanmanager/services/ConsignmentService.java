@@ -1,11 +1,12 @@
 package com.rrdlabs.dukaanmanager.services;
 
 import com.rrdlabs.dukaanmanager.entities.Consignment;
+import com.rrdlabs.dukaanmanager.entities.dto.ConsignmentRequestDto;
 
 import java.util.List;
 
 public interface ConsignmentService {
-    Consignment createConsignment(Consignment consignment);
+    List<Consignment> createConsignment(ConsignmentRequestDto consignment);
 
     Consignment getConsignment(Long consignmentId);
 

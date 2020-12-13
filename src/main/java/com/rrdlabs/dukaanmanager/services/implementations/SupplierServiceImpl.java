@@ -7,11 +7,13 @@ import com.rrdlabs.dukaanmanager.repositories.SupplierRepository;
 import com.rrdlabs.dukaanmanager.services.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 
 @Service
+@Transactional
 public class SupplierServiceImpl implements SupplierService {
 
     private final SupplierRepository supplierRepository;

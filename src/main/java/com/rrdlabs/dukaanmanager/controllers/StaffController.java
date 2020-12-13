@@ -3,6 +3,7 @@ package com.rrdlabs.dukaanmanager.controllers;
 import com.rrdlabs.dukaanmanager.entities.Customer;
 import com.rrdlabs.dukaanmanager.entities.Order;
 import com.rrdlabs.dukaanmanager.entities.Staff;
+import com.rrdlabs.dukaanmanager.services.OrderService;
 import com.rrdlabs.dukaanmanager.services.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,11 @@ import java.util.List;
 public class StaffController {
 
     private final StaffService staffService;
+    private final OrderService orderService;
 
-    public StaffController(StaffService staffService) {
+    public StaffController(StaffService staffService, OrderService orderService) {
         this.staffService = staffService;
+        this.orderService = orderService;
     }
 
     @GetMapping
@@ -51,9 +54,8 @@ public class StaffController {
         staffService.deleteStaff(id);
     }
 
-    // TODO: 10-12-2020 Implement logic for API
     @GetMapping("/{staff_id}/orders")
     public List<Order> getOrdersSoldByStaff(@PathVariable(name = "staff_id") Long id) {
-        return null;
+        return orderService.getStaffOrders(id);
     }
 }

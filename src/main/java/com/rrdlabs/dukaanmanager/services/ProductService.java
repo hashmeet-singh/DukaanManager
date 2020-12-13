@@ -60,5 +60,7 @@ public interface ProductService {
 
     Product updateProduct(Product product);
 
+    Product adjustProductQuantity(Long productId, int quantity);
+
     void deleteProduct(Long id);
 }

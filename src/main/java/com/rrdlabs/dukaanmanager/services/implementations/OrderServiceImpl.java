@@ -1,8 +1,8 @@
 package com.rrdlabs.dukaanmanager.services.implementations;
 
-import com.rrdlabs.dukaanmanager.dto.OrderItemDto;
+import com.rrdlabs.dukaanmanager.entities.dto.LineItemDto;
 import com.rrdlabs.dukaanmanager.entities.*;
-import com.rrdlabs.dukaanmanager.exceptions.QuantityExceededException;
+import com.rrdlabs.dukaanmanager.entities.dto.OrderRequestDto;
 import com.rrdlabs.dukaanmanager.exceptions.RecordNotFoundException;
 import com.rrdlabs.dukaanmanager.repositories.OrderItemRepository;
 import com.rrdlabs.dukaanmanager.repositories.OrderRepository;
@@ -10,8 +10,8 @@ import com.rrdlabs.dukaanmanager.services.CustomerService;
 import com.rrdlabs.dukaanmanager.services.OrderService;
 import com.rrdlabs.dukaanmanager.services.ProductService;
 import com.rrdlabs.dukaanmanager.services.StaffService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
@@ -43,17 +43,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public Order createOrder(Order order) {
         order.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return orderRepository.save(order);
     }
 
     @Override
-    @Transactional
-    public Order createOrder(OrderRequest orderRequest) {
-        List<OrderItemDto> orderItemDtos = orderRequest.getOrderItems();
-        validateProducts(orderItemDtos);
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public Order cancelOrder(Order order) {
+        Order cancelOrder = getOrder(order.getId());
+        cancelOrder.setStatus(OrderStatus.CANCELLED);
+        cancelOrder.getOrderItems().forEach((item) -> {
+            productService.adjustProductQuantity(item.getProduct().getId(), item.getQuantity());
+        });
+
+        return orderRepository.save(cancelOrder);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public Order createOrder(OrderRequestDto orderRequest) {
+        List<LineItemDto> lineItemDtos = orderRequest.getLineItems();
+        validateProducts(lineItemDtos);
         Customer customer = customerService.getCustomer(orderRequest.getCustomerId());
         Staff staff = staffService.getStaff(orderRequest.getStaffId());
         if (Objects.isNull(customer) || Objects.isNull(staff))
@@ -63,26 +75,20 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
         List<OrderItem> orderItems = new ArrayList<>();
 
-        for (OrderItemDto dto : orderItemDtos) {
-            Product product = productService.getProduct(dto.getProduct().getId());
-            if (product.getQuantity() < dto.getQuantity()) {
-                throw new QuantityExceededException("Quantity limit exceeded./nMax quantity available for Product Id: " + product.getId() + " is: " + product.getQuantity());
-            }
-
-            product.setQuantity(product.getQuantity() - dto.getQuantity());
-            productService.updateProduct(product);
-            OrderItem orderItem = new OrderItem(order, product, dto.getQuantity(), dto.getSellingPrice());
+        for (LineItemDto dto : lineItemDtos) {
+            Product product = productService.adjustProductQuantity(dto.getProductId(), -1 * dto.getQuantity());
+            OrderItem orderItem = new OrderItem(order, product, dto.getQuantity(), dto.getPrice());
             orderItems.add(createOrderItem(orderItem));
         }
 
         order.setOrderItems(orderItems);
-        return update(order);
+        return orderRepository.save(order);
     }
 
-    private void validateProducts(List<OrderItemDto> orderItems) {
-        List<OrderItemDto> items = orderItems
+    private void validateProducts(List<LineItemDto> orderItems) {
+        List<LineItemDto> items = orderItems
                 .stream()
-                .filter(item -> Objects.isNull(productService.getProduct(item.getProduct().getId())))
+                .filter(item -> Objects.isNull(productService.getProduct(item.getProductId())))
                 .collect(Collectors.toList());
 
         if (!items.isEmpty()) {
@@ -105,16 +111,22 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getCustomerOrders(Long customerId) {
-        return orderRepository.findByCustomerId(customerId);
+        return orderRepository.findByCustomer_Id(customerId);
     }
 
     @Override
-    @Transactional
+    public List<Order> getStaffOrders(Long staffId) {
+        return orderRepository.findByStaff_Id(staffId);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public OrderItem createOrderItem(OrderItem orderItem) {
         return orderItemRepository.save(orderItem);
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public Order update(Order order) {
         return orderRepository.save(order);
     }
